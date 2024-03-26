@@ -377,6 +377,37 @@ select oc/o as percentage_closed
 from cte join cte2
 on 1=1
 
+-- https://www.interviewquery.com/questions/book-availability-update
+
+create table book_df(
+    book_id int,
+    book_tilte varchar(100),
+    copies_available int
+)
+insert into book_df
+values (0,"Moby Dick",5),
+(1,"1984",7),
+(2,"To Kill a Mockingbird",3),
+(3,"The Great Gatsby",8),
+(4,"Pride and Prejudice",10)
+
+
+select *
+from book_df
+
+
+--https://www.interviewquery.com/questions/rolling-average-steps
+
+with cte as (
+SELECT user_id,steps,date,row_number() over(partition by user_id order by date) as wro,
+round(avg(steps) over(order by user_id,date rows between 2 preceding and current row)) as avg_steps
+FROM daily_steps
+)cte 2 as (
+select user_id,date,avg_steps
+from cte
+where wro>2
+order by user_id
+)
 
 
 
