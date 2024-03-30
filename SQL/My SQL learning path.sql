@@ -424,6 +424,41 @@ order by salary
 limit 3
 
 
+-- https://www.interviewquery.com/questions/third-purchase
+
+with cte as (
+select * ,row_number() over(partition by user_id order by created_at) as row_nd
+from transactions
+)
+select user_id,created_at,product_id,quantity
+from cte
+where row_nd=3
+
+-- https://www.interviewquery.com/questions/user-experience-percentage
+
+with cte1 as (
+    select user_id,position_name,start_date,coalesce(end_date,date(now()))as enddate,
+    row_number() over(partition by user_id order by start_date) as rnd
+    from user_experiences
+)
+,cte as (
+select ue.user_id,ue.position_name,ue2.position_name as p2,ue.rnd,ue2.rnd as rnd2
+from cte1 ue join cte1 ue2
+on ue.start_date>=ue2.enddate
+and ue.user_id=ue2.user_id
+and ue.rnd-1=ue2.rnd
+),total_users as (
+    select count(distinct user_id) as all_users
+    from user_experiences
+),ds_da as (
+select count(distinct user_id) da_ds_users
+from cte 
+where position_name="Data Scientist" and p2="Data Analyst"
+)
+select da_ds_users/all_users as percentage
+from ds_da join total_users
+on 1=1
+
 
 
 
