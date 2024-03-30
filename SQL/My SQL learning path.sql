@@ -459,10 +459,17 @@ select da_ds_users/all_users as percentage
 from ds_da join total_users
 on 1=1
 
+-- https://www.interviewquery.com/questions/rolling-bank-transactions
 
-
-
-
+with cte as (
+    select date_format (created_at,'%Y-%m-%d') as dt,sum(transaction_value) as trv
+    from bank_transactions
+    where transaction_value>0
+    group by 1
+)
+select dt,
+avg(trv) over(order by dt rows between 2 preceding and current row) as rolling_three_day
+from cte
 
 
 
