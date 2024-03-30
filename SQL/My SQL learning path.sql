@@ -410,6 +410,24 @@ order by user_id
 )
 
 
+--https://www.interviewquery.com/questions/lowest-paid
+
+select ep.employee_id,e.salary,count(p.title) as completed_projects
+from employee_projects ep left join projects p
+on ep.project_id=p.id
+join employees e
+on ep.employee_id=e.id
+where end_date is not null
+group by 1
+having count(p.title)>=2
+order by salary
+limit 3
+
+
+
+
+
+
 
 
 
