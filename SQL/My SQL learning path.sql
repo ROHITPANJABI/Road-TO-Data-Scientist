@@ -471,6 +471,15 @@ select dt,
 avg(trv) over(order by dt rows between 2 preceding and current row) as rolling_three_day
 from cte
 
+-- https://www.interviewquery.com/questions/atm-robbery
+
+select distinct a.user_id
+from bank_transactions a join bank_transactions b
+on time_to_sec(a.created_at)=time_to_sec(b.created_at)+10
+or time_to_sec(a.created_at)+10=time_to_sec(b.created_at)
+order by a.user_id
+
+
 
 
 
