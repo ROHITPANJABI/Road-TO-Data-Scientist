@@ -479,6 +479,32 @@ on time_to_sec(a.created_at)=time_to_sec(b.created_at)+10
 or time_to_sec(a.created_at)+10=time_to_sec(b.created_at)
 order by a.user_id
 
+-- https://www.interviewquery.com/questions/search-ranking
+
+with cte as (
+select count(*) as 3_r
+from search_results
+group by query
+having max(rating) <3),
+-- cte2 as (
+--     select count(*)
+--     from cte
+--     where )
+total_queries as (
+    select count(*) as all_r
+    from search_results   
+)
+select round(3_r/all_r,2) as percentage_less_than_3
+from cte join total_queries
+on 1=1
+
+
+-- https://www.interviewquery.com/questions/cumulative-sales-by-product
+
+SELECT product_id,date,sum(price) over(partition by product_id order by date) as cumulative_sum
+FROM sales
+group by product_id,date
+
 
 
 
